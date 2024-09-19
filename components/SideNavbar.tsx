@@ -13,6 +13,8 @@ import {
   FileText,
   CreditCard,
   ChevronRight,
+  BookText,
+  DraftingCompass
 } from "lucide-react";
 
 export default function SideNavbar() {
@@ -48,13 +50,19 @@ export default function SideNavbar() {
       variant: "ghost",
     },
     {
-      title: "Orders",
-      href: "/admin-dashboard/orders",
-      icon: ShoppingCart,
+      title: "Learning",
+      href: "/admin-dashboard/learning",
+      icon: BookText,
       variant: "ghost",
     },
     {
-      title: "Settings",
+      title: "Training",
+      href: "/admin-dashboard/training",
+      icon: DraftingCompass,
+      variant: "ghost",
+    },
+    {
+      title: "Profile Settings",
       href: "/admin-dashboard/settings",
       icon: Settings,
       variant: "ghost",
@@ -84,6 +92,12 @@ export default function SideNavbar() {
       title: "Billing",
       href: "/user-dashboard/billing",
       icon: CreditCard,
+      variant: "ghost",
+    },
+    {
+      title: "Profile Settings",
+      href: "/user-dashboard/settings",
+      icon: Settings,
       variant: "ghost",
     },
   ];

@@ -1,150 +1,216 @@
+// app/admin-dashboard/users/page.tsx
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import React from "react";
 import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import toast, { Toaster } from 'react-hot-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
-
-type Payment = {
-  name: string;
+type User = {
+  id: string;
+  username: string;
   email: string;
-  lastOrder: string;
-  method: string;
+  role: "USER" | "ADMIN";
+  photo: string | null;
 };
 
-const columns: ColumnDef<Payment>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => {
-      return (
-        <div className="flex gap-2 items-center">
-          <Image
-            className="h-10 w-10"
-            src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${row.getValue(
-              "name"
-            )}`}
-            alt="user-image"
-          />
-          <p>{row.getValue("name")} </p>
-        </div>
-      );
+const UsersPage: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [roleFilter, setRoleFilter] = useState<"ALL" | "USER" | "ADMIN">("ALL");
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('/api/users');
+      if (!response.ok) throw new Error('Failed to fetch users');
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error('Failed to fetch users');
     }
-  },
-  {
-    accessorKey: "email",
-    header: "Email"
-  },
-  {
-    accessorKey: "lastOrder",
-    header: "Last Order"
-  },
-  {
-    accessorKey: "method",
-    header: "Method"
-  }
-];
+  };
 
-const data: Payment[] = [
-  {
-    name: "John Doe",
-    email: "john@example.com",
-    lastOrder: "2023-01-01",
-    method: "Credit Card"
-  },
-  {
-    name: "Alice Smith",
-    email: "alice@example.com",
-    lastOrder: "2023-02-15",
-    method: "PayPal"
-  },
-  {
-    name: "Bob Johnson",
-    email: "bob@example.com",
-    lastOrder: "2023-03-20",
-    method: "Stripe"
-  },
-  {
-    name: "Emma Brown",
-    email: "emma@example.com",
-    lastOrder: "2023-04-10",
-    method: "Venmo"
-  },
-  {
-    name: "Michael Davis",
-    email: "michael@example.com",
-    lastOrder: "2023-05-05",
-    method: "Cash"
-  },
-  {
-    name: "Sophia Wilson",
-    email: "sophia@example.com",
-    lastOrder: "2023-06-18",
-    method: "Bank Transfer"
-  },
-  {
-    name: "Liam Garcia",
-    email: "liam@example.com",
-    lastOrder: "2023-07-22",
-    method: "Payoneer"
-  },
-  {
-    name: "Olivia Martinez",
-    email: "olivia@example.com",
-    lastOrder: "2023-08-30",
-    method: "Apple Pay"
-  },
-  {
-    name: "Noah Rodriguez",
-    email: "noah@example.com",
-    lastOrder: "2023-09-12",
-    method: "Google Pay"
-  },
-  {
-    name: "Ava Lopez",
-    email: "ava@example.com",
-    lastOrder: "2023-10-25",
-    method: "Cryptocurrency"
-  },
-  {
-    name: "Elijah Hernandez",
-    email: "elijah@example.com",
-    lastOrder: "2023-11-05",
-    method: "Alipay"
-  },
-  {
-    name: "Mia Gonzalez",
-    email: "mia@example.com",
-    lastOrder: "2023-12-08",
-    method: "WeChat Pay"
-  },
-  {
-    name: "James Perez",
-    email: "james@example.com",
-    lastOrder: "2024-01-18",
-    method: "Square Cash"
-  },
-  {
-    name: "Charlotte Carter",
-    email: "charlotte@example.com",
-    lastOrder: "2024-02-22",
-    method: "Zelle"
-  },
-  {
-    name: "Benjamin Taylor",
-    email: "benjamin@example.com",
-    lastOrder: "2024-03-30",
-    method: "Stripe"
-  }
-];
+  const handleUpdateRole = async (userId: string, newRole: "USER" | "ADMIN") => {
+    try {
+      const response = await fetch('/api/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: userId, role: newRole }),
+      });
+      if (!response.ok) throw new Error('Failed to update user role');
+      const updatedUser = await response.json();
+      setUsers(users.map(user => user.id === userId ? updatedUser : user));
+      toast.success(`User role updated to ${newRole}`);
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      toast.error('Failed to update user role');
+    }
+  };
 
-export default function UsersPage() {
+  const handleDeleteUser = async () => {
+    if (!deleteUserId) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch('/api/users', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: deleteUserId }),
+      });
+      if (!response.ok) throw new Error('Failed to delete user');
+      setUsers(users.filter(user => user.id !== deleteUserId));
+      toast.success('User deleted successfully');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Failed to delete user');
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+      setDeleteUserId(null);
+    }
+  };
+
+  const columns: ColumnDef<User>[] = [
+    {
+      accessorKey: "username",
+      header: "Username",
+      cell: ({ row }) => {
+        const user = row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <Image
+              className="h-10 w-10 rounded-full"
+              src={user.photo || `https://api.dicebear.com/7.x/lorelei/svg?seed=${user.username}`}
+              alt={`${user.username}'s avatar`}
+              width={40}
+              height={40}
+            />
+            <span>{user.username}</span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+    },
+    {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => {
+        const user = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                {user.role} <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => handleUpdateRole(user.id, "USER")}>
+                USER
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleUpdateRole(user.id, "ADMIN")}>
+                ADMIN
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const user = row.original;
+        return (
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => {
+              setDeleteUserId(user.id);
+              setIsDeleteDialogOpen(true);
+            }}
+          >
+            Delete
+          </Button>
+        );
+      },
+    },
+  ];
+
+  const filteredUsers = users.filter(user => {
+    if (roleFilter === "ALL") return true;
+    return user.role === roleFilter;
+  });
+
   return (
-    <div className="flex flex-col gap-5  w-full">
+    <div className="flex flex-col gap-5 w-full">
       <PageTitle title="Users" />
-      <DataTable columns={columns} data={data} />
+      <div className="flex justify-end mb-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              Filter by Role <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Select Role</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setRoleFilter("ALL")}>All</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setRoleFilter("USER")}>Users</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setRoleFilter("ADMIN")}>Admins</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <DataTable columns={columns} data={filteredUsers} />
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you sure you want to delete this user?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete the user account.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteUser} disabled={isDeleting}>
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Toaster />
     </div>
   );
-}
+};
+
+export default UsersPage;
