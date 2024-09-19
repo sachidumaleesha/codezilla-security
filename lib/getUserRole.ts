@@ -4,7 +4,7 @@ import { db } from "./db";
 
 export async function getUserRole() {
   const { userId } = auth();
-  
+
   if (!userId) {
     return null; // User is not authenticated
   }
