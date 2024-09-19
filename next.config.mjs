@@ -6,7 +6,8 @@ const nextConfig = {
       domains: [
         "avatars.githubusercontent.com",
         "lh3.googleusercontent.com",
-        "api.dicebear.com"
+        "api.dicebear.com",
+        "img.clerk.com",
       ],
       dangerouslyAllowSVG: true,
       contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

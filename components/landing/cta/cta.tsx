@@ -15,7 +15,7 @@ export default function CTA() {
           Join our security awareness program today and take the first step
           towards a safer digital future.
         </p>
-        <Link href="/register">
+        <Link href="/sign-up">
           <Button size="lg" variant="secondary">
             Enroll Now
           </Button>
