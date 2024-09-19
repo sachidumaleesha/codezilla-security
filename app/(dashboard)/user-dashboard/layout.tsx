@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import SideNavbar from "@/components/SideNavbar";
-import { UserProfile } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function AdminLayout({
@@ -22,7 +22,7 @@ export default function AdminLayout({
         <SideNavbar />
         <div className="p-8 w-full">
           <div className="absolute top-7 right-8">
-            <UserProfile/>
+            <UserButton/>
           </div>
           {children}
         </div>
