@@ -4,7 +4,7 @@ import {
     AccordionItem,
     AccordionTrigger,
   } from "@/components/ui/accordion"
-  
+
   const faqItems = [
     {
       question: "What is the Security Awareness Program?",
@@ -39,7 +39,7 @@ import {
       answer: "We offer customization options for organizations to tailor the program to their specific industry, compliance requirements, and internal policies. Contact our team to discuss your unique needs."
     }
   ]
-  
+
   export default function FAQ() {
     return (
       <section id="faq" className="py-24 px-4 md:px-6 lg:px-8 bg-gray-50 dark:bg-black dark:text-primary">

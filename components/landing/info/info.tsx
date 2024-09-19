@@ -22,17 +22,17 @@ export default function Info() {
     <section className="py-16 md:py-24 px-4 max-w-7xl mx-auto">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <FeatureBox 
+          <FeatureBox
             icon={Clock}
             title="Real-Time Threat Updates"
             description="Stay informed about the latest security threats and vulnerabilities as they emerge."
           />
-          <FeatureBox 
+          <FeatureBox
             icon={Shield}
             title="Comprehensive Protection"
             description="Learn techniques to secure all aspects of your digital life, from personal to professional."
           />
-          <FeatureBox 
+          <FeatureBox
             icon={HeadphonesIcon}
             title="Expert Support"
             description="Access to security experts for guidance and answers to your cybersecurity questions."
@@ -47,10 +47,10 @@ export default function Info() {
             </p>
           </div>
           <div className="md:w-1/2 flex justify-center">
-            <Image 
-              src="/images/secure1.png" 
-              width={400} 
-              height={300} 
+            <Image
+              src="/images/secure1.png"
+              width={400}
+              height={300}
               alt="Security Illustration"
             />
           </div>
@@ -64,27 +64,27 @@ export default function Info() {
             </p>
           </div>
           <div className="md:w-1/2 flex justify-center md:order-1">
-            <Image 
-              src="/images/secure2.png" 
-              width={400} 
-              height={300} 
+            <Image
+              src="/images/secure2.png"
+              width={400}
+              height={300}
               alt="Collaboration Illustration"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <FeatureBox 
+          <FeatureBox
             icon={LockIcon}
             title="Data Protection"
             description="Learn best practices for safeguarding sensitive information and preventing data breaches."
           />
-          <FeatureBox 
+          <FeatureBox
             icon={UsersIcon}
             title="Social Engineering Defense"
             description="Recognize and defend against social engineering tactics used by cybercriminals."
           />
-          <FeatureBox 
+          <FeatureBox
             icon={DatabaseIcon}
             title="Secure Data Exchange"
             description="Master the techniques for secure data transfer and storage in various environments."
