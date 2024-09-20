@@ -30,6 +30,7 @@ model JobRole {
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
   learnings LearningToJobRole[]
+  quizzes   Quiz[]
 }
 
 enum LearningType {
@@ -78,4 +79,35 @@ model TextContent {
   learning   Learning @relation(fields: [learningId], references: [id])
   learningId String   @unique @db.ObjectId
   content    String
+}
+
+model Quiz {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  jobRole    JobRole?  @relation(fields: [jobRoleId], references: [id])
+  jobRoleId  String?   @db.ObjectId
+  questions  Question[]
+  visibility LearningVisibility @default(PUBLIC)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Question {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  answers  Answer[] 
+  quiz     Quiz     @relation(fields: [quizId], references: [id])
+  quizId   String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Answer {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  text       String
+  isCorrect  Boolean
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
