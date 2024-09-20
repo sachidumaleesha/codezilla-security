@@ -62,14 +62,14 @@ export async function DELETE(request: Request) {
           }
         }
       });
-      
+
       // Delete all questions related to the quiz
       await prisma.question.deleteMany({
         where: {
           quizId: id
         }
       });
-      
+
       // Delete the quiz
       await prisma.quiz.delete({
         where: { id },

@@ -173,8 +173,8 @@ export default function EditQuizPage() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Job Role</FormLabel>
-                <Select 
-                  onValueChange={(value) => field.onChange(value === "none" ? null : value)} 
+                <Select
+                  onValueChange={(value) => field.onChange(value === "none" ? null : value)}
                   value={field.value || "none"}
                 >
                   <FormControl>

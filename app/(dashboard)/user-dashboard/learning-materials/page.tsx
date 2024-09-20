@@ -104,9 +104,9 @@ export default function LearningMaterialsPage() {
                 <FormItem className="flex-1">
                   <FormLabel>Search</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="Search content or job names..." 
-                      {...field} 
+                    <Input
+                      placeholder="Search content or job names..."
+                      {...field}
                       onChange={(e) => {
                         field.onChange(e)
                         form.handleSubmit(onSubmit)()
