@@ -1,3 +1,4 @@
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -21,4 +22,60 @@ model User {
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model JobRole {
+  id        String              @id @default(auto()) @map("_id") @db.ObjectId
+  name      String              @unique
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  learnings LearningToJobRole[]
+}
+
+enum LearningType {
+  VIDEO
+  TEXT
+}
+
+enum LearningVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+model Learning {
+  id           String              @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  type         LearningType
+  visibility   LearningVisibility  @default(PUBLIC)
+  jobRoles     LearningToJobRole[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  videoContent VideoContent?
+  textContent  TextContent?
+}
+
+model LearningToJobRole {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  learning   Learning @relation(fields: [learningId], references: [id])
+  learningId String   @db.ObjectId
+  jobRole    JobRole  @relation(fields: [jobRoleId], references: [id])
+  jobRoleId  String   @db.ObjectId
+
+  @@unique([learningId, jobRoleId])
+}
+
+model VideoContent {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  learning   Learning @relation(fields: [learningId], references: [id])
+  learningId String   @unique @db.ObjectId
+  videoUrl   String
+  videoTitle String? // Make videoTitle optional
+  content    String
+}
+
+model TextContent {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  learning   Learning @relation(fields: [learningId], references: [id])
+  learningId String   @unique @db.ObjectId
+  content    String
 }

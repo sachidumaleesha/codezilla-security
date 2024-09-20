@@ -14,7 +14,9 @@ import {
   CreditCard,
   ChevronRight,
   BookText,
-  DraftingCompass
+  DraftingCompass,
+  UserPlus,
+  Command,
 } from "lucide-react";
 
 export default function SideNavbar() {
@@ -50,6 +52,12 @@ export default function SideNavbar() {
       variant: "ghost",
     },
     {
+      title: "Job Roles",
+      href: "/admin-dashboard/job-roles",
+      icon: UserPlus,
+      variant: "ghost",
+    },
+    {
       title: "Learning",
       href: "/admin-dashboard/learning",
       icon: BookText,
@@ -59,6 +67,12 @@ export default function SideNavbar() {
       title: "Training",
       href: "/admin-dashboard/training",
       icon: DraftingCompass,
+      variant: "ghost",
+    },
+    {
+      title: "User Dashboard",
+      href: "/user-dashboard",
+      icon: Command,
       variant: "ghost",
     },
     {

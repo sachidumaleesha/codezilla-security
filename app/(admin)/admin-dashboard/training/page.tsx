@@ -1,7 +1,9 @@
+import PageTitle from "@/components/PageTitle";
+
 export default function TrainingPage() {
   return (
-    <div>
-      <h1>Training Page</h1>
+    <div className="flex flex-col gap-5 w-full">
+      <PageTitle title="Training" />
     </div>
   );
 }
