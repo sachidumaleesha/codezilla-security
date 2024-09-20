@@ -8,15 +8,14 @@ import { Button } from "./ui/button";
 import {
   LayoutDashboard,
   Users,
-  ShoppingCart,
   Settings,
   FileText,
-  CreditCard,
   ChevronRight,
   BookText,
   DraftingCompass,
   UserPlus,
   Command,
+  Shapes,
 } from "lucide-react";
 
 export default function SideNavbar() {
@@ -36,7 +35,7 @@ export default function SideNavbar() {
     setIsCollapsed(!isCollapsed);
   }
 
-  const isAdminDashboard = pathname?.startsWith('/admin-dashboard');
+  const isAdminDashboard = pathname?.startsWith("/admin-dashboard");
 
   const adminLinks: NavLink[] = [
     {
@@ -64,8 +63,8 @@ export default function SideNavbar() {
       variant: "ghost",
     },
     {
-      title: "Training",
-      href: "/admin-dashboard/training",
+      title: "Quiz",
+      href: "/admin-dashboard/quiz",
       icon: DraftingCompass,
       variant: "ghost",
     },
@@ -91,21 +90,15 @@ export default function SideNavbar() {
       variant: "default",
     },
     {
-      title: "Orders",
-      href: "/user-dashboard/orders",
-      icon: ShoppingCart,
-      variant: "ghost",
-    },
-    {
-      title: "Invoices",
-      href: "/user-dashboard/invoices",
+      title: "Learning Materials",
+      href: "/user-dashboard/learning-materials",
       icon: FileText,
       variant: "ghost",
     },
     {
-      title: "Billing",
-      href: "/user-dashboard/billing",
-      icon: CreditCard,
+      title: "Take a Quiz",
+      href: "/user-dashboard/take-quiz",
+      icon: Shapes,
       variant: "ghost",
     },
     {
@@ -117,7 +110,9 @@ export default function SideNavbar() {
   ];
 
   if (!isMounted) {
-    return <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24"></div>;
+    return (
+      <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24"></div>
+    );
   }
 
   return (
