@@ -6,14 +6,14 @@ export async function GET(request: Request, { params }: { params: { id: string }
   try {
     const learning = await db.learning.findUnique({
       where: { id: params.id },
-      include: { 
+      include: {
         jobRoles: {
           include: {
             jobRole: true
           }
         },
         videoContent: true,
-        textContent: true 
+        textContent: true
       },
     });
     if (!learning) {
@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const { title, jobRoles, type, videoUrl, videoTitle, content } = await request.json();
-    
+
     // First, fetch the current learning to check its type
     const currentLearning = await db.learning.findUnique({
       where: { id: params.id },
@@ -105,7 +105,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const updatedLearning = await db.learning.update({
       where: { id: params.id },
       data: updateData,
-      include: { 
+      include: {
         jobRoles: {
           include: {
             jobRole: true
@@ -115,7 +115,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         textContent: true
       },
     });
-    
+
     return NextResponse.json(updatedLearning);
   } catch (error) {
     console.error('Error updating learning:', error);
