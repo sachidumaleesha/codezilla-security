@@ -4,7 +4,7 @@ import { db } from "./db";
 
 export async function getUserRole() {
   const { userId } = auth();
-  
+
   if (!userId) {
     return null; // User is not authenticated
   }
@@ -12,7 +12,7 @@ export async function getUserRole() {
   try {
     const user = await db.user.findUnique({
       where: { clerkId: userId },
-      select: { role: true }
+      select: { role: true },
     });
 
     return user?.role || null;

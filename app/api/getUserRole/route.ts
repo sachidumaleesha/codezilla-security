@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { getUserRole } from "@/lib/getUserRole";
@@ -9,6 +9,9 @@ export async function GET() {
     return NextResponse.json({ role });
   } catch (error) {
     console.error("Error in getUserRole API route:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
