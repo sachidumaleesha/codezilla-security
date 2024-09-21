@@ -66,7 +66,7 @@ export default function LearningMaterialsPage() {
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <PageTitle title="Knowledge Base" />
+      <PageTitle title="Learning Materials" />
       <Form {...form}>
         <form onChange={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col md:flex-row gap-4">

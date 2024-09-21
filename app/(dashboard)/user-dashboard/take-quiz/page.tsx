@@ -1,151 +1,96 @@
-"use client";
+'use client'
 
-import { DataTable } from "@/components/DataTable";
-import { ColumnDef } from "@tanstack/react-table";
-import React from "react";
-import PageTitle from "@/components/PageTitle";
-import Image from "next/image";
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import PageTitle from "@/components/PageTitle"
+import { Input } from "@/components/ui/input"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form"
+import QuizGrid from "./QuizGrid"
 
-type Payment = {
-  name: string;
-  email: string;
-  lastOrder: string;
-  method: string;
-};
+const filterSchema = z.object({
+  search: z.string().optional(),
+})
 
-const columns: ColumnDef<Payment>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => {
-      return (
-        <div className="flex gap-2 items-center">
-          <Image
-            className="h-10 w-10"
-            src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${row.getValue(
-              "name"
-            )}`}
-            width={40}
-            height={40}
-            alt="user-image"
-          />
-          <p>{row.getValue("name")} </p>
-        </div>
-      );
+type FilterValues = z.infer<typeof filterSchema>
+
+type Quiz = {
+  id: string
+  title: string
+  jobRole?: {
+    name: string
+  }
+}
+
+export default function QuizzesPage() {
+  const [quizzes, setQuizzes] = useState<Quiz[]>([])
+  const router = useRouter()
+
+  const form = useForm<FilterValues>({
+    resolver: zodResolver(filterSchema),
+    defaultValues: {
+      search: "",
     },
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "lastOrder",
-    header: "Last Order",
-  },
-  {
-    accessorKey: "method",
-    header: "Method",
-  },
-];
+  })
 
-const data: Payment[] = [
-  {
-    name: "John Doe",
-    email: "john@example.com",
-    lastOrder: "2023-01-01",
-    method: "Credit Card",
-  },
-  {
-    name: "Alice Smith",
-    email: "alice@example.com",
-    lastOrder: "2023-02-15",
-    method: "PayPal",
-  },
-  {
-    name: "Bob Johnson",
-    email: "bob@example.com",
-    lastOrder: "2023-03-20",
-    method: "Stripe",
-  },
-  {
-    name: "Emma Brown",
-    email: "emma@example.com",
-    lastOrder: "2023-04-10",
-    method: "Venmo",
-  },
-  {
-    name: "Michael Davis",
-    email: "michael@example.com",
-    lastOrder: "2023-05-05",
-    method: "Cash",
-  },
-  {
-    name: "Sophia Wilson",
-    email: "sophia@example.com",
-    lastOrder: "2023-06-18",
-    method: "Bank Transfer",
-  },
-  {
-    name: "Liam Garcia",
-    email: "liam@example.com",
-    lastOrder: "2023-07-22",
-    method: "Payoneer",
-  },
-  {
-    name: "Olivia Martinez",
-    email: "olivia@example.com",
-    lastOrder: "2023-08-30",
-    method: "Apple Pay",
-  },
-  {
-    name: "Noah Rodriguez",
-    email: "noah@example.com",
-    lastOrder: "2023-09-12",
-    method: "Google Pay",
-  },
-  {
-    name: "Ava Lopez",
-    email: "ava@example.com",
-    lastOrder: "2023-10-25",
-    method: "Cryptocurrency",
-  },
-  {
-    name: "Elijah Hernandez",
-    email: "elijah@example.com",
-    lastOrder: "2023-11-05",
-    method: "Alipay",
-  },
-  {
-    name: "Mia Gonzalez",
-    email: "mia@example.com",
-    lastOrder: "2023-12-08",
-    method: "WeChat Pay",
-  },
-  {
-    name: "James Perez",
-    email: "james@example.com",
-    lastOrder: "2024-01-18",
-    method: "Square Cash",
-  },
-  {
-    name: "Charlotte Carter",
-    email: "charlotte@example.com",
-    lastOrder: "2024-02-22",
-    method: "Zelle",
-  },
-  {
-    name: "Benjamin Taylor",
-    email: "benjamin@example.com",
-    lastOrder: "2024-03-30",
-    method: "Stripe",
-  },
-];
+  useEffect(() => {
+    fetchQuizzes()
+  }, [])
 
-export default function TakeQuiz() {
+  const fetchQuizzes = async (filters?: FilterValues) => {
+    let url = "/api/quizzes"
+    if (filters?.search) {
+      url += `?search=${encodeURIComponent(filters.search)}`
+    }
+    const response = await fetch(url)
+    const data = await response.json()
+    setQuizzes(data)
+  }
+
+  const onSubmit = (values: FilterValues) => {
+    fetchQuizzes(values)
+  }
+
   return (
-    <div className="flex flex-col gap-5  w-full">
-      <PageTitle title="Take Quiz" />
-      <DataTable columns={columns} data={data} />
+    <div className="flex flex-col gap-5 w-full">
+      <PageTitle title="Quizzes" />
+      <Form {...form}>
+        <form onChange={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="flex flex-col md:flex-row gap-4">
+            <FormField
+              control={form.control}
+              name="search"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Search</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Search quizzes or job roles..." 
+                      {...field} 
+                      onChange={(e) => {
+                        field.onChange(e)
+                        form.handleSubmit(onSubmit)()
+                      }}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </form>
+      </Form>
+      <QuizGrid
+        quizzes={quizzes}
+        onItemClick={(id) => router.push(`/user-dashboard/take-quiz/${id}`)}
+      />
     </div>
-  );
+  )
 }
