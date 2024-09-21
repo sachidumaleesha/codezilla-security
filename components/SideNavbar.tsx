@@ -16,12 +16,14 @@ import {
   UserPlus,
   Command,
   Shapes,
+  Undo2,
 } from "lucide-react";
 
 export default function SideNavbar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   const onlyWidth = useWindowWidth();
   const pathname = usePathname();
@@ -29,6 +31,9 @@ export default function SideNavbar() {
   useEffect(() => {
     setIsMobileWidth(onlyWidth < 768);
     setIsMounted(true);
+    fetch("/api/getUserRole")
+      .then((res) => res.json())
+      .then((data) => setUserRole(data.role));
   }, [onlyWidth]);
 
   function toggleSidebar() {
@@ -113,6 +118,15 @@ export default function SideNavbar() {
     return (
       <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24"></div>
     );
+  }
+
+  if (userRole === "ADMIN") {
+    userLinks.push({
+      title: "Admin Dashboard",
+      href: "/admin-dashboard/",
+      icon: Undo2,
+      variant: "ghost",
+    });
   }
 
   return (
