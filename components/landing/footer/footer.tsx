@@ -8,10 +8,10 @@ export default function Footer() {
           <p className="text-sm text-white dark:text-gray-200">© 2023 CodeZilla Security. All rights reserved.</p>
         </div>
         <nav className="flex space-x-4 ">
-          <Link href="/privacy" className="text-sm text-white hover:underline dark:text-gray-200">
+          <Link href="/" className="text-sm text-white hover:underline dark:text-gray-200">
             Privacy Policy
           </Link>
-          <Link href="/terms" className="text-sm text-white hover:underline dark:text-gray-200">
+          <Link href="/" className="text-sm text-white hover:underline dark:text-gray-200">
             Terms of Service
           </Link>
           <Link href="/about-us" className="text-sm text-white hover:underline dark:text-gray-200">
