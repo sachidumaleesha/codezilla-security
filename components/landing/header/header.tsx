@@ -14,16 +14,19 @@ export default function Header() {
         </Link>
       </div>
       <nav className="hidden md:flex space-x-4">
-        <Link href="#features" className="text-sm font-medium hover:underline">
+        <Link href="/#features" className="text-sm font-medium hover:underline">
           Features
         </Link>
         <Link
-          href="#testimonials"
+          href="/#testimonials"
           className="text-sm font-medium hover:underline"
         >
           Testimonials
         </Link>
-        <Link href="#contact" className="text-sm font-medium hover:underline">
+        <Link href="/about-us" className="text-sm font-medium hover:underline">
+          About-us
+        </Link>
+        <Link href="/contact-us" className="text-sm font-medium hover:underline">
           Contact
         </Link>
       </nav>
