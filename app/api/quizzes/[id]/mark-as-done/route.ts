@@ -1,3 +1,4 @@
+// /api/quizzes/[id]/mark-as-done/route.ts
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { auth } from '@clerk/nextjs/server'

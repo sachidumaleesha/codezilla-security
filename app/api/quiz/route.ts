@@ -50,10 +50,49 @@ export async function PUT(request: Request) {
   }
 }
 
+// export async function DELETE(request: Request) {
+//   try {
+//     const { id } = await request.json();
+//     await db.$transaction(async (prisma) => {
+//       // Delete all answers related to the quiz's questions
+//       await prisma.answer.deleteMany({
+//         where: {
+//           question: {
+//             quizId: id
+//           }
+//         }
+//       });
+      
+//       // Delete all questions related to the quiz
+//       await prisma.question.deleteMany({
+//         where: {
+//           quizId: id
+//         }
+//       });
+      
+//       // Delete the quiz
+//       await prisma.quiz.delete({
+//         where: { id },
+//       });
+//     });
+//     return NextResponse.json({ message: "Quiz deleted successfully" });
+//   } catch (error) {
+//     console.error("Error deleting quiz:", error);
+//     return NextResponse.json({ error: `Failed to delete quiz: ${error}` }, { status: 500 });
+//   }
+// }
+
 export async function DELETE(request: Request) {
   try {
     const { id } = await request.json();
     await db.$transaction(async (prisma) => {
+      // Delete all QuizAttempt records associated with this quiz
+      await prisma.quizAttempt.deleteMany({
+        where: {
+          quizId: id
+        }
+      });
+
       // Delete all answers related to the quiz's questions
       await prisma.answer.deleteMany({
         where: {
@@ -75,7 +114,7 @@ export async function DELETE(request: Request) {
         where: { id },
       });
     });
-    return NextResponse.json({ message: "Quiz deleted successfully" });
+    return NextResponse.json({ message: "Quiz and related data deleted successfully" });
   } catch (error) {
     console.error("Error deleting quiz:", error);
     return NextResponse.json({ error: `Failed to delete quiz: ${error}` }, { status: 500 });
