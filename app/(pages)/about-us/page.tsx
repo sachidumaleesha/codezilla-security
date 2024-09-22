@@ -14,9 +14,14 @@ export default function AboutUs() {
       imagePath: "/images/about-us/senath.jpg",
     },
     {
-      name: "Bob Smith",
+      name: "Sithija Nirmal",
       role: "Member",
-      imagePath: "/images/about-us/senath.jpg",
+      imagePath: "/images/about-us/Sithija.jpg",
+    },
+    {
+      name: "Chandira Deshan",
+      role: "Member",
+      imagePath: "/images/about-us/chandira.jpg",
     },
     {
       name: "Kasuni Sewwandi",
@@ -25,11 +30,6 @@ export default function AboutUs() {
     },
     {
       name: "Kajal Perera",
-      role: "Member",
-      imagePath: "/images/about-us/kajal.jpg",
-    },
-    {
-      name: "Eva Martinez",
       role: "Member",
       imagePath: "/images/about-us/kajal.jpg",
     },
