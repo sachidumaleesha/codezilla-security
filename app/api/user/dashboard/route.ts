@@ -36,7 +36,7 @@ export async function GET() {
       db.learning.count(),
       db.quiz.count(),
       db.quizAttempt.findMany({
-        where: { 
+        where: {
           userId: user.id,
           completed: true
         },
