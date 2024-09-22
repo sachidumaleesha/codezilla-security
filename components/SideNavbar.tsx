@@ -17,6 +17,7 @@ import {
   Command,
   Shapes,
   Undo2,
+  Headset,
 } from "lucide-react";
 
 export default function SideNavbar() {
@@ -71,6 +72,12 @@ export default function SideNavbar() {
       title: "Quiz",
       href: "/admin-dashboard/quiz",
       icon: DraftingCompass,
+      variant: "ghost",
+    },
+    {
+      title: "Support Requests",
+      href: "/admin-dashboard/contact-us-requests",
+      icon: Headset,
       variant: "ghost",
     },
     {
