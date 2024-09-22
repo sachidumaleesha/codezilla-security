@@ -1,6 +1,7 @@
 // app/api/users/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { clerkClient } from '@clerk/nextjs/server';
 
 export async function GET() {
   try {
@@ -28,8 +29,9 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const { id } = await request.json();
+    const { id, clerkId } = await request.json();
     await db.user.delete({ where: { id } });
+    await clerkClient.users.deleteUser(clerkId);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting user:', error);

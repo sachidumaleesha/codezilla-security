@@ -27,6 +27,7 @@ import { ChevronDown } from "lucide-react";
 
 type User = {
   id: string;
+  clerkId: string;
   username: string;
   email: string;
   role: "USER" | "ADMIN" | "SUPER_ADMIN";
@@ -75,13 +76,16 @@ const UsersPage: React.FC = () => {
 
   const handleDeleteUser = async () => {
     if (!deleteUserId) return;
-
+  
     setIsDeleting(true);
     try {
+      const userToDelete = users.find(user => user.id === deleteUserId);
+      if (!userToDelete) throw new Error('User not found');
+  
       const response = await fetch('/api/users', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: deleteUserId }),
+        body: JSON.stringify({ id: deleteUserId, clerkId: userToDelete.clerkId }),
       });
       if (!response.ok) throw new Error('Failed to delete user');
       setUsers(users.filter(user => user.id !== deleteUserId));

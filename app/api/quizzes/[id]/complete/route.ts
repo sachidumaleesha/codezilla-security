@@ -9,7 +9,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
   }
 
   try {
-    const { score, totalQuestions, passed } = await request.json()
+    const { score, totalQuestions, passed, attemptNumber } = await request.json()
 
     const user = await db.user.findUnique({
       where: { clerkId: userId },
@@ -19,39 +19,17 @@ export async function POST(request: Request, { params }: { params: { id: string 
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    // Check if the user has already attempted this quiz
-    const existingAttempt = await db.quizAttempt.findFirst({
-      where: {
+    // Create a new attempt
+    const quizAttempt = await db.quizAttempt.create({
+      data: {
         userId: user.id,
         quizId: params.id,
+        score,
+        totalQuestions,
+        completed: passed,
+        attemptNumber,
       },
     })
-
-    let quizAttempt
-
-    if (existingAttempt) {
-      // Update the existing attempt
-      quizAttempt = await db.quizAttempt.update({
-        where: { id: existingAttempt.id },
-        data: {
-          score,
-          totalQuestions,
-          completed: passed,
-          updatedAt: new Date(),
-        },
-      })
-    } else {
-      // Create a new attempt if it's the user's first time
-      quizAttempt = await db.quizAttempt.create({
-        data: {
-          userId: user.id,
-          quizId: params.id,
-          score,
-          totalQuestions,
-          completed: passed,
-        },
-      })
-    }
 
     return NextResponse.json({ message: 'Quiz completion recorded', quizAttempt })
   } catch (error) {

@@ -7,6 +7,7 @@ type QuizResultsProps = {
   totalQuestions: number
   quizId: string
   onQuizMarkedAsDone: () => void
+  canRetake: boolean
 }
 
 export default function QuizResults({ score, totalQuestions, quizId, onQuizMarkedAsDone }: QuizResultsProps) {
