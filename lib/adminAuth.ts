@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 
 export async function adminAuth() {
   const role = await getUserRole();
-  
+
   if (role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
     redirect('/');
   }

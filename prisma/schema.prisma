@@ -98,7 +98,7 @@ model Quiz {
 model Question {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   title    String
-  answers  Answer[] 
+  answers  Answer[]
   quiz     Quiz     @relation(fields: [quizId], references: [id])
   quizId   String   @db.ObjectId
   isMultipleChoice Boolean @default(false)
