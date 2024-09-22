@@ -76,12 +76,12 @@ const UsersPage: React.FC = () => {
 
   const handleDeleteUser = async () => {
     if (!deleteUserId) return;
-  
+
     setIsDeleting(true);
     try {
       const userToDelete = users.find(user => user.id === deleteUserId);
       if (!userToDelete) throw new Error('User not found');
-  
+
       const response = await fetch('/api/users', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
