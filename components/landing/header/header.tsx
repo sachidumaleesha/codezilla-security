@@ -24,10 +24,10 @@ export default function Header() {
           Testimonials
         </Link>
         <Link href="/about-us" className="text-sm font-medium hover:underline">
-          About-us
+          About-Us
         </Link>
         <Link href="/contact-us" className="text-sm font-medium hover:underline">
-          Contact
+          Contact-Us
         </Link>
       </nav>
       <div className="flex items-center space-x-2">

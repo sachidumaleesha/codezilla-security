@@ -14,6 +14,9 @@ export default function Footer() {
           <Link href="/terms" className="text-sm text-white hover:underline dark:text-gray-200">
             Terms of Service
           </Link>
+          <Link href="/about-us" className="text-sm text-white hover:underline dark:text-gray-200">
+            About Us
+          </Link>
           <Link href="/contact-us" className="text-sm text-white hover:underline dark:text-gray-200">
             Contact Us
           </Link>
