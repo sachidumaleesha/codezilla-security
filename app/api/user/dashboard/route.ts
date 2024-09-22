@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 
+interface CompletedQuiz {
+  id: string;
+  title: string;
+  totalQuestions: number;
+  userScore: number;
+}
+
 export async function GET() {
   const { userId } = auth();
 
@@ -29,11 +36,14 @@ export async function GET() {
       db.learning.count(),
       db.quiz.count(),
       db.quizAttempt.findMany({
-        where: { userId: user.id },
+        where: { 
+          userId: user.id,
+          completed: true
+        },
         select: {
           score: true,
           totalQuestions: true,
-          completed: true,
+          quizId: true,
           quiz: {
             select: {
               id: true,
@@ -54,6 +64,7 @@ export async function GET() {
       }),
       db.quizAttempt.groupBy({
         by: ['userId'],
+        where: { completed: true },
         _sum: {
           score: true,
         },
@@ -83,22 +94,27 @@ export async function GET() {
       })
     );
 
-    const doneQuizzes = userQuizAttempts.filter(attempt => attempt.completed).length;
-    const totalPoints = userQuizAttempts.reduce((sum, attempt) => sum + attempt.score, 0);
+    const completedQuizzes = userQuizAttempts.reduce<Record<string, CompletedQuiz>>((acc, attempt) => {
+      if (!acc[attempt.quizId]) {
+        acc[attempt.quizId] = {
+          id: attempt.quiz.id,
+          title: attempt.quiz.title,
+          totalQuestions: attempt.quiz.questions.length,
+          userScore: attempt.score,
+        };
+      }
+      return acc;
+    }, {});
 
-    const userQuizzes = userQuizAttempts.map(attempt => ({
-      id: attempt.quiz.id,
-      title: attempt.quiz.title,
-      totalQuestions: attempt.quiz.questions.length,
-      userScore: attempt.score,
-    }));
+    const doneQuizzes = Object.keys(completedQuizzes).length;
+    const totalPoints = Object.values(completedQuizzes).reduce((sum, quiz) => sum + quiz.userScore, 0);
 
     return NextResponse.json({
       totalLearnings,
       totalQuizzes,
       doneQuizzes,
       totalPoints,
-      userQuizzes,
+      userQuizzes: Object.values(completedQuizzes),
       recentQuizzes: recentQuizzes.map(quiz => ({
         id: quiz.id,
         title: quiz.title,
