@@ -16,7 +16,7 @@ export default function AboutUs() {
     {
       name: "Sithija Nirmal",
       role: "Member",
-      imagePath: "/images/about-us/Sithija.jpg",
+      imagePath: "/images/about-us/sthija.jpg",
     },
     {
       name: "Chandira Deshan",
