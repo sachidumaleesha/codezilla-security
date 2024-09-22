@@ -34,7 +34,7 @@ export default function Hero() {
           </Button>
 
           <SignedIn>
-            {userRole === 'ADMIN' ? (
+            {userRole === 'ADMIN' || userRole === 'SUPER_ADMIN' ? (
               <Link href="/admin-dashboard"><Button>Go to Admin Dashboard</Button></Link>
             ) : (
               <Link href="/user-dashboard"><Button>Go to Dashboard</Button></Link>

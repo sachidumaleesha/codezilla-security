@@ -1,4 +1,3 @@
-// app/admin-dashboard/users/page.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -30,13 +29,13 @@ type User = {
   id: string;
   username: string;
   email: string;
-  role: "USER" | "ADMIN";
+  role: "USER" | "ADMIN" | "SUPER_ADMIN";
   photo: string | null;
 };
 
 const UsersPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [roleFilter, setRoleFilter] = useState<"ALL" | "USER" | "ADMIN">("ALL");
+  const [roleFilter, setRoleFilter] = useState<"ALL" | "USER" | "ADMIN" | "SUPER_ADMIN">("ALL");
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -126,6 +125,9 @@ const UsersPage: React.FC = () => {
       header: "Role",
       cell: ({ row }) => {
         const user = row.original;
+        if (user.role === "SUPER_ADMIN") {
+          return <span className="font-semibold text-primary">{user.role}</span>;
+        }
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -157,6 +159,7 @@ const UsersPage: React.FC = () => {
               setDeleteUserId(user.id);
               setIsDeleteDialogOpen(true);
             }}
+            disabled={user.role === "SUPER_ADMIN"}
           >
             Delete
           </Button>
@@ -186,6 +189,7 @@ const UsersPage: React.FC = () => {
             <DropdownMenuItem onClick={() => setRoleFilter("ALL")}>All</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setRoleFilter("USER")}>Users</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setRoleFilter("ADMIN")}>Admins</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setRoleFilter("SUPER_ADMIN")}>Super Admins</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -120,7 +120,7 @@ export default function SideNavbar() {
     );
   }
 
-  if (userRole === "ADMIN") {
+  if (userRole === "ADMIN" || userRole === "SUPER_ADMIN") {
     userLinks.push({
       title: "Admin Dashboard",
       href: "/admin-dashboard/",
