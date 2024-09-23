@@ -61,6 +61,9 @@ export default function QuizTakingPage() {
   );
   const [canRetake, setCanRetake] = useState(true);
   const [attemptNumber, setAttemptNumber] = useState(1);
+  const [attemptsLeft, setAttemptsLeft] = useState(2);
+
+  console.log(attemptNumber)
 
   const fetchQuiz = useCallback(async () => {
     try {
@@ -91,11 +94,12 @@ export default function QuizTakingPage() {
       const response = await fetch(`/api/quizzes/${id}/attempt`);
       if (response.ok) {
         const data = await response.json();
-        setPreviousAttempt(data.attempt);
-        if (data.attempt) {
-          const passThreshold = Math.ceil(data.attempt.totalQuestions / 2);
-          setCanRetake(data.attempt.score < passThreshold && data.attempt.attemptNumber < 3);
-          setAttemptNumber(data.attempt.attemptNumber + 1);
+        setPreviousAttempt(data.latestAttempt);
+        setAttemptsLeft(data.attemptsLeft);
+        if (data.latestAttempt) {
+          const passThreshold = Math.ceil(data.latestAttempt.totalQuestions / 2);
+          setCanRetake(data.attemptsLeft > 0 && data.latestAttempt.score < passThreshold);
+          setAttemptNumber(data.latestAttempt.attemptNumber + 1);
         }
       }
     } catch (error) {
@@ -166,10 +170,10 @@ export default function QuizTakingPage() {
     }
 
     try {
-      const response = await fetch(`/api/quizzes/${id}/complete`, {
+      const response = await fetch(`/api/quizzes/${id}/attempt`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ score, totalQuestions, passed, attemptNumber }),
+        body: JSON.stringify({ score, totalQuestions, passed }),
       });
 
       if (!response.ok) {
@@ -179,7 +183,8 @@ export default function QuizTakingPage() {
       const data = await response.json();
       setPreviousAttempt(data.quizAttempt);
       setQuizCompleted(true);
-      setCanRetake(data.quizAttempt.score < passThreshold && data.quizAttempt.attemptNumber < 3);
+      setCanRetake(data.attemptsLeft > 0 && data.quizAttempt.score < passThreshold);
+      setAttemptsLeft(data.attemptsLeft);
     } catch (error) {
       console.error("Error marking quiz as complete:", error);
       toast({
@@ -191,6 +196,26 @@ export default function QuizTakingPage() {
   };
 
   if (!quiz) return <div>Loading...</div>;
+
+  if (attemptsLeft === 0) {
+    return (
+      <div className="flex flex-col gap-5 w-full">
+        <PageTitle title={quiz.title} />
+        <Card>
+          <CardContent className="pt-6">
+            <h2 className="text-2xl font-bold mb-4">Maximum Attempts Reached</h2>
+            <p>You have exceeded the maximum number of attempts for this quiz.</p>
+            {previousAttempt && (
+              <p>Your best score: {previousAttempt.score} / {previousAttempt.totalQuestions}</p>
+            )}
+          </CardContent>
+          <CardFooter>
+            <Button onClick={() => router.push("/user-dashboard/take-quiz")}>Back to Quizzes</Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
 
   if (previousAttempt && !canRetake && previousAttempt.completed) {
     return (
@@ -224,6 +249,9 @@ export default function QuizTakingPage() {
           </p>
           <p>
             Attempt Number: {previousAttempt.attemptNumber}
+          </p>
+          <p>
+            Attempts Left: {attemptsLeft}
           </p>
         </div>
       )}
