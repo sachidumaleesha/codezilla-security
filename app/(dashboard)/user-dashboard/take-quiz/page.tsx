@@ -88,7 +88,7 @@ export default function QuizzesPage() {
         </form>
       </Form>
       <div className="bg-red-300 p-2 rounded-lg">
-        Users have only have 02 Attempts.
+        For Each Quiz You have only have 02 Attempts.
       </div>
       <QuizGrid
         quizzes={quizzes}
