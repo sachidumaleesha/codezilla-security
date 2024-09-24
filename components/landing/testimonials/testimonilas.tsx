@@ -19,7 +19,7 @@ const testimonials = [
     role: "Small Business Owner",
     content: "The knowledge gained from this program has been invaluable in protecting my business from cyber threats.",
     avatar: "/images/avatar3.jpeg"
-  }
+  },
 ]
 
 export default function Testimonials() {

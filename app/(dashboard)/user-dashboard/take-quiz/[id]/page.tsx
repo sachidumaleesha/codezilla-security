@@ -256,74 +256,35 @@ export default function QuizTakingPage() {
         </div>
       )}
       {!quizCompleted ? (
-        <>
-          <Progress value={progress} className="w-full" />
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                Question {currentQuestionIndex + 1} of {quiz.questions.length}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <h3 className="text-lg font-semibold mb-4">
-                {currentQuestion.title}
-              </h3>
-              {isMultipleChoice(currentQuestion) ? (
-                currentQuestion.answers.map((answer) => (
-                  <div
-                    key={answer.id}
-                    className="flex items-center space-x-2 mb-2"
-                  >
-                    <Checkbox
-                      id={answer.id}
-                      checked={selectedAnswers.includes(answer.id)}
-                      onCheckedChange={() => handleAnswerSelect(answer.id)}
-                      disabled={isAnswerSubmitted}
-                      className={
-                        isAnswerSubmitted
-                          ? answer.isCorrect
-                            ? "border-green-500"
-                            : selectedAnswers.includes(answer.id)
-                            ? "border-red-500"
-                            : ""
-                          : ""
-                      }
-                    />
-                    <Label
-                      htmlFor={answer.id}
-                      className={
-                        isAnswerSubmitted
-                          ? answer.isCorrect
-                            ? "text-green-500"
-                            : selectedAnswers.includes(answer.id)
-                            ? "text-red-500"
-                            : ""
-                          : ""
-                      }
-                    >
-                      {answer.text}
-                    </Label>
-                  </div>
-                ))
-              ) : (
-                <RadioGroup
-                  value={selectedAnswers[0] || ""}
-                  onValueChange={handleAnswerSelect}
-                >
-                  {currentQuestion.answers.map((answer) => (
+        quiz.questions.length > 0 ? (
+          <>
+            <Progress value={progress} className="w-full" />
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  Question {currentQuestionIndex + 1} of {quiz.questions.length}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <h3 className="text-lg font-semibold mb-4">
+                  {currentQuestion.title}
+                </h3>
+                {isMultipleChoice(currentQuestion) ? (
+                  currentQuestion.answers.map((answer) => (
                     <div
                       key={answer.id}
                       className="flex items-center space-x-2 mb-2"
                     >
-                      <RadioGroupItem
-                        value={answer.id}
+                      <Checkbox
                         id={answer.id}
+                        checked={selectedAnswers.includes(answer.id)}
+                        onCheckedChange={() => handleAnswerSelect(answer.id)}
                         disabled={isAnswerSubmitted}
                         className={
                           isAnswerSubmitted
                             ? answer.isCorrect
                               ? "border-green-500"
-                              : selectedAnswers[0] === answer.id
+                              : selectedAnswers.includes(answer.id)
                               ? "border-red-500"
                               : ""
                             : ""
@@ -335,7 +296,7 @@ export default function QuizTakingPage() {
                           isAnswerSubmitted
                             ? answer.isCorrect
                               ? "text-green-500"
-                              : selectedAnswers[0] === answer.id
+                              : selectedAnswers.includes(answer.id)
                               ? "text-red-500"
                               : ""
                             : ""
@@ -344,28 +305,79 @@ export default function QuizTakingPage() {
                         {answer.text}
                       </Label>
                     </div>
-                  ))}
-                </RadioGroup>
-              )}
+                  ))
+                ) : (
+                  <RadioGroup
+                    value={selectedAnswers[0] || ""}
+                    onValueChange={handleAnswerSelect}
+                  >
+                    {currentQuestion.answers.map((answer) => (
+                      <div
+                        key={answer.id}
+                        className="flex items-center space-x-2 mb-2"
+                      >
+                        <RadioGroupItem
+                          value={answer.id}
+                          id={answer.id}
+                          disabled={isAnswerSubmitted}
+                          className={
+                            isAnswerSubmitted
+                              ? answer.isCorrect
+                                ? "border-green-500"
+                                : selectedAnswers[0] === answer.id
+                                ? "border-red-500"
+                                : ""
+                              : ""
+                          }
+                        />
+                        <Label
+                          htmlFor={answer.id}
+                          className={
+                            isAnswerSubmitted
+                              ? answer.isCorrect
+                                ? "text-green-500"
+                                : selectedAnswers[0] === answer.id
+                                ? "text-red-500"
+                                : ""
+                              : ""
+                          }
+                        >
+                          {answer.text}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                )}
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                {!isAnswerSubmitted ? (
+                  <Button
+                    onClick={handleSubmitAnswer}
+                    disabled={selectedAnswers.length === 0}
+                  >
+                    Submit Answer
+                  </Button>
+                ) : (
+                  <Button onClick={handleNextQuestion}>
+                    {currentQuestionIndex < quiz.questions.length - 1
+                      ? "Next Question"
+                      : "Finish Quiz"}
+                  </Button>
+                )}
+              </CardFooter>
+            </Card>
+          </>
+        ) : (
+          <Card>
+            <CardContent className="pt-6">
+              <h2 className="text-2xl font-bold mb-4">No Questions Available</h2>
+              <p>Questions are not yet added to this quiz.</p>
             </CardContent>
-            <CardFooter className="flex justify-between">
-              {!isAnswerSubmitted ? (
-                <Button
-                  onClick={handleSubmitAnswer}
-                  disabled={selectedAnswers.length === 0}
-                >
-                  Submit Answer
-                </Button>
-              ) : (
-                <Button onClick={handleNextQuestion}>
-                  {currentQuestionIndex < quiz.questions.length - 1
-                    ? "Next Question"
-                    : "Finish Quiz"}
-                </Button>
-              )}
+            <CardFooter>
+              <Button onClick={() => router.push("/user-dashboard/take-quiz")}>Back to Quizzes</Button>
             </CardFooter>
           </Card>
-        </>
+        )
       ) : (
         <QuizResults
           score={score}
