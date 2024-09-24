@@ -87,6 +87,9 @@ export default function QuizzesPage() {
           </div>
         </form>
       </Form>
+      <div className="bg-red-300 p-2 rounded-lg">
+        Users have only have 02 Attempts.
+      </div>
       <QuizGrid
         quizzes={quizzes}
         onItemClick={(id) => router.push(`/user-dashboard/take-quiz/${id}`)}
