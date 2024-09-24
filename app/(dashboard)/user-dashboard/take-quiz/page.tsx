@@ -72,9 +72,9 @@ export default function QuizzesPage() {
                 <FormItem className="flex-1">
                   <FormLabel>Search</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="Search quizzes or job roles..." 
-                      {...field} 
+                    <Input
+                      placeholder="Search quizzes or job roles..."
+                      {...field}
                       onChange={(e) => {
                         field.onChange(e)
                         form.handleSubmit(onSubmit)()
