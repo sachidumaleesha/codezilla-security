@@ -2,8 +2,6 @@
 
 **CodeZilla Security** is a full-stack web application built with **Next.js 14**, **Prisma**, and **Clerk** that delivers an online **security awareness training program** for individuals and organizations. It helps users learn how to recognize phishing, social engineering, and other cyber threats through structured courses, progress tracking, and interactive learning tools.
 
-🌐 **Live Demo:** [codezilla-security.vercel.app](https://codezilla-security.vercel.app)
-
 <p align="left">
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-14-black?logo=next.js">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript">
